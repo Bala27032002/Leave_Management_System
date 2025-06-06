@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ApplyLeaveForm from './ApplyLeaveForm';
+import LeaveDetailsModal from './LeaveDetailsModal';
+
 import axios from 'axios';
 const LeaveApply = () => {
   const [open, setOpen] = useState(false);
@@ -44,7 +46,7 @@ const LeaveApply = () => {
 
 
 const handleSubmit = async (e) => {
-  e.preventDefault(); // Prevent page reload
+  e.preventDefault(); 
 
   const employeeId = localStorage.getItem("empid");
   const name = localStorage.getItem("Name");
@@ -97,11 +99,25 @@ const fetchLeaves = async () => {
 useEffect(()=>{
   fetchLeaves();
 },[]);
+const [viewOpen, setViewOpen] = useState(false);
+const [selectedLeave, setSelectedLeave] = useState(null);
 
+// Open modal
+const handleView = (leave) => {
+  setSelectedLeave(leave);
+  setViewOpen(true);
+};
+
+// Close modal
+const handleCloseView = () => {
+  setViewOpen(false);
+  setSelectedLeave(null);
+};
 const handleStatusChange = async (id, approved_status) => {
   try {
     await axios.put(`http://localhost:8000/leave/update-status/${id}`, { approved_status });
-    fetchLeaves(); // Refresh leave list
+    fetchLeaves(); 
+    handleCloseView();
     
   } catch (error) {
     console.error("Error updating leave status:", error);
@@ -194,9 +210,15 @@ const handleStatusChange = async (id, approved_status) => {
 
     </TableCell>
     <TableCell>
-      <Button size="small" variant="outlined" color="primary">
-        View
-      </Button>
+      <Button
+  size="small"
+  variant="outlined"
+  color="primary"
+  onClick={() => handleView(leave)}
+>
+  View
+</Button>
+
     </TableCell>
   </TableRow>
 ))}
@@ -225,6 +247,14 @@ const handleStatusChange = async (id, approved_status) => {
   handleSubmit={handleSubmit}
   
 />
+<LeaveDetailsModal
+  open={viewOpen}
+  onClose={handleCloseView}
+  leave={selectedLeave}
+  isAdmin={JSON.parse(localStorage.getItem("permissions") || "[]").includes("admin")}
+  onApproveReject={handleStatusChange}
+/>
+
 
     </>
   );

@@ -18,10 +18,8 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import app_img from "../../Assests/Images/sidenav/app.png";
 import notification_img from "../../Assests/Images/sidenav/Notification.png";
 import layout from "../../Assests/Images/sidenav/layout.png";
-import portfolio from "../../Assests/Images/sidenav/portfolio.png";
 import hiring from "../../Assests/Images/sidenav/hiring.png";
-import vector from "../../Assests/Images/sidenav/Vector.png";
-import interview from "../../Assests/Images/sidenav/interview.png";
+
 import accept from "../../Assests/Images/sidenav/accept.png";
 import cogwheel from "../../Assests/Images/sidenav/cogwheel.png";
 import report from "../../Assests/Images/sidenav/icons8-report-24.png";
@@ -44,8 +42,9 @@ function Navbar() {
 const isAdmin = permissions.includes("admin"); // true if admin exists
   const array_img = [
   { img: layout, routeLink: "/dashboard", tooltip: "Dashboard" },
-  { img: hiring, routeLink: "/employee", tooltip: "Employee's" },
+  { img: hiring, routeLink: "/holiday", tooltip: "Holiday's" },
   { img: accept, routeLink: "/myleave", tooltip: "My Leave" },
+
   ...(isAdmin ? [{ img: cogwheel, routeLink: "/settings", tooltip: "Settings" }] : [])
 ];
 
@@ -126,15 +125,28 @@ const UserName=localStorage.getItem("Name")
                 }}
                 PaperProps={{ style: { width: 150 } }}
               >
-                <ListItem button onClick={() => window.location.href = "/managesettings"}>
+                <ListItem button onClick={() => window.location.href = "/dashboard"}>
                   <SettingsIcon />
-                  <ListItemText primary="Settings" />
+                  <ListItemText primary="Profile" />
                 </ListItem>
                 <hr />
-                <ListItem onClick={handleLogout}>
-                  <ExitToAppIcon />
-                  <ListItemText primary="Logout" />
-                </ListItem>
+                <ListItem 
+  onClick={handleLogout}
+  sx={{
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#f0f0f0', 
+      color: '#2F70CB',           
+    },
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1, 
+  }}
+>
+  <ExitToAppIcon />
+  <ListItemText primary="Logout" />
+</ListItem>
+
               </Popover>
             </Box>
           </Toolbar>

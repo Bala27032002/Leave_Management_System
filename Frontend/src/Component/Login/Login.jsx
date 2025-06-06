@@ -75,7 +75,6 @@ localStorage.setItem("permissions", JSON.stringify(filteredPermissions));
         navigate("/dashboard");
       }
     } catch (error) {
-      // If the error response has a message, display it in the Snackbar
       if (error.response && error.response.data) {
           setSnackbarMessage(error.response.data);
       } else {
