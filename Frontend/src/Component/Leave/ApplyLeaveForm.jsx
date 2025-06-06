@@ -43,10 +43,20 @@ const ApplyLeaveForm = ({ open, onClose, onSubmit }) => {
     }),
     reason: Yup.string().required('Reason is required')
   }),
-  onSubmit: (values) => {
+  onSubmit: async (values, { setTouched }) => {
+  setTouched({
+    leaveType: true,
+    leaveCategory: true,
+    leaveDate: true,
+    endDate: true,
+    reason: true
+  });
+  if (formik.isValid) {
     onSubmit(values);
     formik.resetForm();
   }
+}
+
 });
 
 
@@ -68,7 +78,7 @@ const ApplyLeaveForm = ({ open, onClose, onSubmit }) => {
       <form onSubmit={formik.handleSubmit}>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {/* Leave Type */}
-          <FormControl fullWidth required error={formik.touched.leaveType && Boolean(formik.errors.leaveType)}>
+          <FormControl fullWidth required error={Boolean(formik.errors.leaveType)}>
             <InputLabel>Select Leave Type</InputLabel>
             <Select
               name="leaveType"
@@ -82,7 +92,7 @@ const ApplyLeaveForm = ({ open, onClose, onSubmit }) => {
               <MenuItem value="More than one day">More than one day</MenuItem>
               <MenuItem value="Half a day">Half a day</MenuItem>
             </Select>
-            <FormHelperText>{formik.touched.leaveType && formik.errors.leaveType}</FormHelperText>
+  <FormHelperText>{formik.errors.leaveType}</FormHelperText>
           </FormControl>
 
           {/* Leave Category */}

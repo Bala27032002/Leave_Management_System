@@ -46,7 +46,7 @@ const LeaveApply = () => {
 
 
 const handleSubmit = async (e) => {
-  e.preventDefault(); 
+  // e.preventDefault(); // Prevent page reload
 
   const employeeId = localStorage.getItem("empid");
   const name = localStorage.getItem("Name");
