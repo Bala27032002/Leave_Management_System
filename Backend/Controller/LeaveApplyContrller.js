@@ -4,7 +4,6 @@ exports.CreateLeave = async (req, res) => {
   try {
     const { employeeId, leaveType, leaveCategory, leaveDate, endDate, reason } = req.body;
 
-    // Step 1: Fetch employeeName using employeeId
     const [rows] = await db.promise().query(
       'SELECT Name FROM user WHERE employeeId = ?',
       [employeeId]
@@ -16,7 +15,6 @@ exports.CreateLeave = async (req, res) => {
 
     const employeeName = rows[0].Name;
 
-    // Step 2: Insert into leave_applications
     const insertQuery = `
       INSERT INTO leave_applications (employeeId, employeeName, leaveType, leaveCategory, leaveDate, endDate, reason)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -73,13 +71,14 @@ exports.updateLeaveStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { approved_status } = req.body;
+  const approvedDate = new Date().toISOString().slice(0, 10); 
 
     if (!approved_status) {
       return res.status(400).send("Status is required");
     }
 
-    const query = "UPDATE leave_applications SET approved_status = ? WHERE id = ?";
-    db.execute(query, [approved_status, id], (err, result) => {
+    const query = "UPDATE leave_applications SET approved_status = ?, approvedDate = ? WHERE id = ?";
+    db.execute(query, [approved_status, approvedDate, id], (err, result) => {
       if (err) {
         console.error("Error updating status:", err);
         return res.status(500).send("Error updating status");

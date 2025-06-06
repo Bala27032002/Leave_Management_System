@@ -15,7 +15,5 @@ router.put('/employees/:id', authController.updateEmployee);
 // Login route
 router.post('/login', authController.login);
 
-// Protected profile route
-router.get('/profile', authController.verifyToken, authController.profile);
 
 module.exports = router;

@@ -1,21 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../config/db'); // Import your DB connection
-const secretkey = "abced"; // JWT secret
+const db = require('../config/db'); 
+const secretkey = "abced";
 
 // User sign-up
 exports.signup = async (req, res) => {
     try {
-        // Extract new fields from request body
         const {  Name, email_id, password,  employeeId, role, joiningDate, permissions } = req.body;
         
-        // Hash the password
         const hashpassword = await bcrypt.hash(password, 10);
 
-        // Convert permissions object to JSON string
         const permissionsJson = JSON.stringify(permissions);
 
-        // Update the SQL query to include new fields
         const query = `
             INSERT INTO user ( Name, email_id, password, employeeId, role, joiningDate, permissions)
             VALUES ( ?, ?, ?, ?, ?, ?, ?)
@@ -51,9 +47,8 @@ exports.getEmployee = (req, res) => {
     }
 };
 
-// Fetch employee by ID
 exports.getEmployeeById = (req, res) => {
-    const { id } = req.params; // Get the employee id from the request parameters
+    const { id } = req.params; 
     const query = "SELECT * FROM user WHERE id = ?";
 
     db.execute(query, [id], (err, results) => {
@@ -69,7 +64,6 @@ exports.getEmployeeById = (req, res) => {
         // Check if permissions is already an object or a JSON string
         const employee = results[0];
         
-        // If it's a string, parse it, otherwise leave it as is
         if (typeof employee.permissions === 'string') {
             try {
                 employee.permissions = JSON.parse(employee.permissions);
@@ -83,7 +77,6 @@ exports.getEmployeeById = (req, res) => {
     });
 };
 
-// PUT: Update an existing employee by matching id
 exports.updateEmployee = async (req, res) => {
     try {
         const { id } = req.params; // Employee id from URL
@@ -95,7 +88,6 @@ exports.updateEmployee = async (req, res) => {
             hashpassword = await bcrypt.hash(password, 10);
         }
 
-        // Convert permissions object to JSON string if it exists
         const permissionsJson = permissions ? JSON.stringify(permissions) : null;
 
         // SQL query to update user based on provided fields
@@ -112,7 +104,6 @@ exports.updateEmployee = async (req, res) => {
             WHERE id = ?
         `;
 
-        // Execute the query with updated fields
         db.execute(query, [Name, email_id, hashpassword, employeeId, role, joiningDate, permissionsJson, id], (err, result) => {
             if (err) {
                 console.error("Error updating employee:", err);
@@ -132,12 +123,10 @@ exports.updateEmployee = async (req, res) => {
 };
 
 
-// Delete an employee by ID
 exports.deleteEmployee = (req, res) => {
     try {
         const { id } = req.params; // Employee id from URL
 
-        // SQL query to delete user by ID
         const query = "DELETE FROM user WHERE id = ?";
 
         // Execute the query
@@ -189,7 +178,6 @@ exports.profile = (req, res) => {
     res.send('Welcome to your profile');
 };
 
-// Token verification middleware
 exports.verifyToken = (req, res, next) => {
     const token = req.headers.authorization;
     if (!token) return res.status(401).send("Access denied");

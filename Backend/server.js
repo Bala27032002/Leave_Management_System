@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const authRoutes = require('./Route/UserRoute');
-const demoRoute = require('./Route/DemoRoute');
 const LeaveAply = require('./Route/LeaveApplyRoute');
 const db = require('./config/db')
 
@@ -21,7 +20,6 @@ app.use((req,res,next)=>{
 
 
 app.use('/auth',authRoutes);
-app.use('/app',demoRoute);
 app.use('/leave',LeaveAply);
 
 const PORT = process.env.PORT || 5000;
